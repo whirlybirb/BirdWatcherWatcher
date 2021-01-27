@@ -11,7 +11,7 @@ public class Binoculars : MonoBehaviour
 
     float smooth = 5;
 
-    public  Image nocks;
+    public Image nocks;
 
     private bool weZoomin;
 
