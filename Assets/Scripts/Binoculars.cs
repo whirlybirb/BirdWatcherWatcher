@@ -32,7 +32,6 @@ public class Binoculars : MonoBehaviour
         }
         if (weZoomin)
         {
-            Debug.Log("current FOV");
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, zoom, Time.deltaTime * smooth);
             nocks.enabled = true;
         }
