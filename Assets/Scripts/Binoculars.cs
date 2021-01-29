@@ -45,4 +45,9 @@ public class Binoculars : MonoBehaviour
             nocks.enabled = false;
         }
     }
+
+    public bool getZoom()
+    {
+        return weZoomin;
+    }
 }
