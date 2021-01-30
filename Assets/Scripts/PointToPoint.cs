@@ -33,10 +33,13 @@ public class PointToPoint : MonoBehaviour
     {
         RaycastHit hit;
 
+
         if (GetComponent<Binoculars>().getZoom())
         {
             foreach (Transform perch in perches)
             {
+                if(perch.gameObject.GetComponent<Outline>()) perch.gameObject.GetComponent<Outline>().enabled = false;
+
                 //draw ray from center of camera
                 Ray camRay = cam.ViewportPointToRay(new Vector3(0.5f,0.5f,0));
 
@@ -47,6 +50,7 @@ public class PointToPoint : MonoBehaviour
                     //is it the perch?
                     if (hit.transform == perch)
                     {
+                        perch.gameObject.GetComponent<Outline>().enabled = true;
                         Debug.Log("hit: " + perch.gameObject.name);
                         if (Input.GetKeyDown(KeyCode.E))
                         {
@@ -58,8 +62,16 @@ public class PointToPoint : MonoBehaviour
                             //turn off the controller so the flight looks a little smoother
                             GetComponent<FirstPersonController>().enabled = false;
                         }
+                        /*if (!GetComponent<Binoculars>().getZoom())
+                        {
+                            perch.gameObject.GetComponent<Outline>().enabled = false;
+                        }*/
                     }
                 }
+                /*if (!GetComponent<Binoculars>().getZoom())
+                {
+                    if (perch.gameObject.GetComponent<Outline>()) perch.gameObject.GetComponent<Outline>().enabled = false;
+                }*/
             }
         }
 
