@@ -9,6 +9,7 @@ public class PointToPoint : MonoBehaviour
     public GameObject Points; //all the possible perches
     private Camera cam;
     public List<Transform> perches; //the transforms of said perches
+    public Transform currentPerch;
 
     //old an new positions for moving
     private Vector3 oldPos;
@@ -28,52 +29,43 @@ public class PointToPoint : MonoBehaviour
         }        
     }
 
+    public bool checkPerches(Transform hit)
+    {
+        foreach (Transform perch in perches)
+        {
+            if (hit == perch)
+            {
+                //Debug.Log("hitting perch: " + perch.name);
+                currentPerch = perch;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void getMoving()
+    {
+
+        oldPos = transform.position;
+        newPos = currentPerch.position;
+        moving = true;
+
+        //turn off the controller so the flight looks a little smoother
+        GetComponent<FirstPersonController>().enabled = false;
+    }
+
+    public void setOutline(bool set)
+    {
+        if (currentPerch && currentPerch.gameObject.GetComponent<Outline>()) Debug.Log("currentPerch: "+ currentPerch.gameObject.GetComponent<Outline>().enabled);
+        else Debug.Log("currentPerch: null");
+        //if current path is not null and the current selected perch has the outline script, set it to whatever set is
+        if (currentPerch && currentPerch.gameObject.GetComponent<Outline>()) currentPerch.gameObject.GetComponent<Outline>().enabled = set;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-
-
-        if (GetComponent<Binoculars>().getZoom())
-        {
-            foreach (Transform perch in perches)
-            {
-                if(perch.gameObject.GetComponent<Outline>()) perch.gameObject.GetComponent<Outline>().enabled = false;
-
-                //draw ray from center of camera
-                Ray camRay = cam.ViewportPointToRay(new Vector3(0.5f,0.5f,0));
-
-                //see what ray hits
-                if (Physics.Raycast(camRay, out hit))
-                {
-
-                    //is it the perch?
-                    if (hit.transform == perch)
-                    {
-                        perch.gameObject.GetComponent<Outline>().enabled = true;
-                        Debug.Log("hit: " + perch.gameObject.name);
-                        if (Input.GetKeyDown(KeyCode.E))
-                        {
-                            //prepare to move player to new perch
-                            oldPos = transform.position;
-                            newPos = perch.position;
-                            moving = true;
-
-                            //turn off the controller so the flight looks a little smoother
-                            GetComponent<FirstPersonController>().enabled = false;
-                        }
-                        /*if (!GetComponent<Binoculars>().getZoom())
-                        {
-                            perch.gameObject.GetComponent<Outline>().enabled = false;
-                        }*/
-                    }
-                }
-                /*if (!GetComponent<Binoculars>().getZoom())
-                {
-                    if (perch.gameObject.GetComponent<Outline>()) perch.gameObject.GetComponent<Outline>().enabled = false;
-                }*/
-            }
-        }
+        
 
         //move player to new perch
         if (moving)
@@ -86,8 +78,10 @@ public class PointToPoint : MonoBehaviour
             //when you are close enough (as determined be minDist) to the new position, turn control back on and stop moving
             if (Vector3.Distance(transform.position, newPos) <= minDist)
             {
+                if (currentPerch.gameObject.GetComponent<Outline>()) currentPerch.gameObject.GetComponent<Outline>().enabled = false;
                 GetComponent<FirstPersonController>().enabled = true;
                 moving = false;
+                currentPerch = null;
             }
         }
     }
