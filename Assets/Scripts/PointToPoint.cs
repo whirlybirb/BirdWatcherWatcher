@@ -9,7 +9,7 @@ public class PointToPoint : MonoBehaviour
     public GameObject Points; //all the possible perches
     private Camera cam;
     public List<Transform> perches; //the transforms of said perches
-    public Transform currentPerch;
+    public Transform currentPerch; //the perch you are currently looking at
 
     //old an new positions for moving
     private Vector3 oldPos;
@@ -36,7 +36,9 @@ public class PointToPoint : MonoBehaviour
             if (hit == perch)
             {
                 //Debug.Log("hitting perch: " + perch.name);
+                //set whatever perch you are looking at to be the current perch
                 currentPerch = perch;
+                //then say that yes you are in fact looking at a viable perch
                 return true;
             }
         }
@@ -56,9 +58,10 @@ public class PointToPoint : MonoBehaviour
 
     public void setOutline(bool set)
     {
-        if (currentPerch && currentPerch.gameObject.GetComponent<Outline>()) Debug.Log("currentPerch: "+ currentPerch.gameObject.GetComponent<Outline>().enabled);
-        else Debug.Log("currentPerch: null");
-        //if current path is not null and the current selected perch has the outline script, set it to whatever set is
+        //tell you if you are currently colliding with the current selected perch
+        //if (currentPerch && currentPerch.gameObject.GetComponent<Outline>()) Debug.Log("currentPerch "+currentPerch.name+": "+ currentPerch.gameObject.GetComponent<Outline>().enabled);
+        //else Debug.Log("currentPerch: null");
+        //if current perch is not null and the current selected perch has the outline script, set it to whatever set is
         if (currentPerch && currentPerch.gameObject.GetComponent<Outline>()) currentPerch.gameObject.GetComponent<Outline>().enabled = set;
     }
 

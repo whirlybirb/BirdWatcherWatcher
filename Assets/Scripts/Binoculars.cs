@@ -58,20 +58,24 @@ public class Binoculars : MonoBehaviour
         Ray camRay = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
         //see what ray hits
-        if (Physics.Raycast(camRay, out hit))
+        if (Physics.Raycast(camRay, out hit)) //if the raycaster collides with anything
         {
-            if(GetComponent<PointToPoint>().checkPerches(hit.transform))
+            if(GetComponent<PointToPoint>().checkPerches(hit.transform)) //check if that anything is a perch
             {
-                GetComponent<PointToPoint>().setOutline(true);
-                if (Input.GetMouseButtonUp(0))
+                GetComponent<PointToPoint>().setOutline(true); //turn on the highliting of anyperch it is colliding with
+                if (Input.GetMouseButtonUp(0)) //go to that perch if you click rmb
                 {
                     GetComponent<PointToPoint>().getMoving();
                 }
             }
-            else
+            else //if it's not, turn anything highlighted off
             {
                 GetComponent<PointToPoint>().setOutline(false);
             }
+        }
+        else  //If the raycaster collides with absolutly nothing, turn anything highlighted off
+        {
+            GetComponent<PointToPoint>().setOutline(false);
         }
     }
 
